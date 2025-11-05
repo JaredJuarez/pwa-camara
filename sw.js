@@ -2,10 +2,12 @@
 const CACHE_NAME = "camara-pwa-v1"; // Nombre/versión del caché
 const urlsToCache = [
   // Lista de archivos a guardar en caché
-  "/",
-  "/index.html",
-  "/app.js",
-  "/manifest.json",
+  "./",
+  "./index.html",
+  "./app.js",
+  "./manifest.json",
+  "./icons/192.png",
+  "./icons/512.png",
 ];
 
 // Instalar Service Worker
