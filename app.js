@@ -140,8 +140,7 @@ async function openCamera() {
 
     // 4. Actualización de la UI
     cameraContainer.style.display = "block";
-    openCameraBtn.textContent = "Cámara Abierta";
-    openCameraBtn.disabled = true;
+    openCameraBtn.style.display = "none";
 
     console.log(`Cámara abierta exitosamente - Modo: ${currentFacingMode}`);
   } catch (error) {
@@ -210,12 +209,6 @@ function takePhoto() {
   // 4. Agregar la foto a la galería
   addPhotoToGallery(imageDataURL);
 
-  // 5. Mostrar el canvas con la foto capturada brevemente
-  canvas.style.display = "block";
-  setTimeout(() => {
-    canvas.style.display = "none";
-  }, 1000);
-
   // Nota: Ya NO cerramos la cámara automáticamente para permitir tomar múltiples fotos
   console.log("Foto agregada a la galería");
 }
@@ -232,8 +225,7 @@ function closeCamera() {
     cameraContainer.style.display = "none";
 
     // Restaurar el botón 'Abrir Cámara'
-    openCameraBtn.textContent = "Abrir Cámara";
-    openCameraBtn.disabled = false;
+    openCameraBtn.style.display = "block";
 
     console.log("Cámara cerrada");
   }
