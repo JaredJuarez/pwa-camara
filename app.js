@@ -27,7 +27,11 @@ function renderGallery() {
   photoGallery.classList.add("active");
   photoCount.textContent = photos.length;
 
-  photos.forEach((photo, index) => {
+  // Renderizar las fotos en orden inverso (más reciente primero)
+  [...photos].reverse().forEach((photo, reverseIndex) => {
+    // Calcular el índice real en el array original
+    const index = photos.length - 1 - reverseIndex;
+
     const photoItem = document.createElement("div");
     photoItem.className = "photo-item";
 
