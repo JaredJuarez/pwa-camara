@@ -90,6 +90,8 @@
         border-radius: 4px;
         margin-bottom: 12px;
         background: #000;
+        max-height: 70vh;
+        object-fit: cover;
       }
 
       canvas {
@@ -98,6 +100,27 @@
         border-radius: 4px;
         margin-top: 12px;
         border: 1px solid #e0e0e0;
+      }
+
+      #switchCamera {
+        display: none;
+        background: #666;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          max-width: 100%;
+          padding: 20px;
+        }
+
+        body {
+          padding: 10px;
+        }
+
+        h1 {
+          margin-bottom: 20px;
+          font-size: 1.3em;
+        }
       }
 
       .info {
@@ -119,6 +142,7 @@
 
       <div id="cameraContainer">
         <video id="video" autoplay playsinline></video>
+        <button id="switchCamera">Cambiar Cámara</button>
         <button id="takePhoto">Tomar Foto</button>
       </div>
 
