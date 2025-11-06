@@ -6,10 +6,76 @@ const takePhotoBtn = document.getElementById("takePhoto");
 const switchCameraBtn = document.getElementById("switchCamera");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d"); // Contexto 2D para dibujar en el Canvas
+const photoGallery = document.getElementById("photoGallery");
+const galleryContainer = document.getElementById("galleryContainer");
+const photoCount = document.getElementById("photoCount");
 
 let stream = null; // Variable para almacenar el MediaStream de la cámara
 let currentFacingMode = "user"; // Iniciar con cámara frontal (selfie)
 let isMobile = false;
+let photos = []; // Array para almacenar las fotos temporalmente (solo en sesión actual)
+
+// Renderizar la galería de fotos
+function renderGallery() {
+  galleryContainer.innerHTML = "";
+
+  if (photos.length === 0) {
+    photoGallery.classList.remove("active");
+    return;
+  }
+
+  photoGallery.classList.add("active");
+  photoCount.textContent = photos.length;
+
+  photos.forEach((photo, index) => {
+    const photoItem = document.createElement("div");
+    photoItem.className = "photo-item";
+
+    const img = document.createElement("img");
+    img.src = photo.dataURL;
+    img.alt = `Foto ${index + 1}`;
+    img.onclick = () => downloadPhoto(photo.dataURL, photo.timestamp);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.innerHTML = "×";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deletePhoto(index);
+    };
+
+    photoItem.appendChild(img);
+    photoItem.appendChild(deleteBtn);
+    galleryContainer.appendChild(photoItem);
+  });
+}
+
+// Agregar una nueva foto a la galería
+function addPhotoToGallery(dataURL) {
+  const photo = {
+    dataURL: dataURL,
+    timestamp: Date.now(),
+  };
+
+  photos.push(photo);
+  renderGallery();
+}
+
+// Eliminar una foto específica
+function deletePhoto(index) {
+  if (confirm("¿Eliminar esta foto?")) {
+    photos.splice(index, 1);
+    renderGallery();
+  }
+}
+
+// Descargar una foto
+function downloadPhoto(dataURL, timestamp) {
+  const link = document.createElement("a");
+  link.href = dataURL;
+  link.download = `foto-${timestamp}.png`;
+  link.click();
+}
 
 // Detectar si es dispositivo móvil
 function checkIfMobile() {
@@ -141,17 +207,17 @@ function takePhoto() {
     `Foto capturada: ${canvas.width}x${canvas.height}, ${imageDataURL.length} caracteres`
   );
 
-  // Mostrar el canvas con la foto capturada
+  // 4. Agregar la foto a la galería
+  addPhotoToGallery(imageDataURL);
+
+  // 5. Mostrar el canvas con la foto capturada brevemente
   canvas.style.display = "block";
+  setTimeout(() => {
+    canvas.style.display = "none";
+  }, 1000);
 
-  // 4. Cierre de la Cámara (Para liberar recursos)
-  closeCamera();
-
-  // Opcionalmente, descargar la imagen
-  const link = document.createElement("a");
-  link.href = imageDataURL;
-  link.download = "foto-" + Date.now() + ".png";
-  link.click();
+  // Nota: Ya NO cerramos la cámara automáticamente para permitir tomar múltiples fotos
+  console.log("Foto agregada a la galería");
 }
 
 // Función para cerrar la cámara
